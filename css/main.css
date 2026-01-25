@@ -1632,7 +1632,7 @@ section,
 
 .portfolio .portfolio-wrap .portfolio-info h4 {
   font-size: 20px;
-  color: var(--accent-color);
+  color: var(--heading-color);
   font-weight: 700;
   margin-bottom: 15px;
 }
