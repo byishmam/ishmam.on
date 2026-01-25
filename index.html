@@ -993,7 +993,8 @@
               <h3>Get In Touch</h3>
               <p>Think we’re a match? Send a message. If it’s about a project, I’ll reply fast.</p>
 
-              <form action="https://formspree.io/f/xgoagazp" method="POST" class="contact-form">
+              <form action="https://formspree.io/f/xgoagazp" method="POST" id="my-contact-form">
+                <div id="form-status"></div>
   <div class="row gy-4">
     <input type="hidden" name="_next" value="https://byishmam.github.io/ishmam.on/#contact">
 
@@ -1018,7 +1019,8 @@
       <div class="error-message"></div>
       <div class="sent-message">Your message has been sent. Thank you!</div>
 
-      <button type="submit" class="btn">Send Message</button>
+      <button type="submit" id="submit-btn">Send Message</button>
+
     </div>
 
   </div>
