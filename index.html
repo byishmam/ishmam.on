@@ -993,34 +993,29 @@
               <h3>Get In Touch</h3>
               <p>Think we’re a match? Send a message. If it’s about a project, I’ll reply fast.</p>
 
-              <form action="https://formspree.io/f/xgoagazp" method="POST" id="my-contact-form">
-                <div id="form-status"></div>
+              <form action="https://formspree.io/f/xgoagazp" method="POST" id="ajax-contact-form">
   <div class="row gy-4">
-    <input type="hidden" name="_next" value="https://byishmam.github.io/ishmam.on/#contact">
 
     <div class="col-md-6">
-      <input type="text" name="name" class="form-control" placeholder="Your Name" required="">
+      <input type="text" name="name" class="form-control" placeholder="Your Name" required>
     </div>
 
     <div class="col-md-6 ">
-      <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
+      <input type="email" class="form-control" name="email" placeholder="Your Email" required>
     </div>
 
     <div class="col-12">
-      <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
+      <input type="text" class="form-control" name="subject" placeholder="Subject" required>
     </div>
 
     <div class="col-12">
-      <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
+      <textarea class="form-control" name="message" rows="6" placeholder="Message" required></textarea>
     </div>
 
     <div class="col-12 text-center">
-      <div class="loading">Loading</div>
-      <div class="error-message"></div>
-      <div class="sent-message">Your message has been sent. Thank you!</div>
+      <div id="form-status" style="margin-bottom: 15px; display: none;"></div>
 
-      <button type="submit" id="submit-btn">Send Message</button>
-
+      <button type="submit" id="submit-button" class="btn" style="background: #000; color: #fff; padding: 10px 30px;">Send Message</button>
     </div>
 
   </div>
@@ -1074,6 +1069,55 @@
 
   <!-- Main JS File -->
   <script src="js/main.js"></script>
+
+  <script>
+  var form = document.getElementById("ajax-contact-form");
+  
+  async function handleSubmit(event) {
+    event.preventDefault();
+    var status = document.getElementById("form-status");
+    var button = document.getElementById("submit-button");
+    var data = new FormData(event.target);
+    
+    // UI update: Loading state
+    status.style.display = "block";
+    status.style.color = "blue";
+    status.innerHTML = "Sending...";
+    button.disabled = true;
+
+    fetch(event.target.action, {
+      method: form.method,
+      body: data,
+      headers: {
+          'Accept': 'application/json'
+      }
+    }).then(response => {
+      if (response.ok) {
+        // SUCCESS: Show green message
+        status.style.color = "green";
+        status.innerHTML = "Your message has been sent. Thank you!";
+        form.reset();
+        button.disabled = false;
+      } else {
+        // ERROR: Show red message
+        response.json().then(data => {
+          status.style.color = "red";
+          if (Object.hasOwn(data, 'errors')) {
+            status.innerHTML = data["errors"].map(error => error["message"]).join(", ");
+          } else {
+            status.innerHTML = "Oops! There was a problem submitting your form";
+          }
+          button.disabled = false;
+        })
+      }
+    }).catch(error => {
+      status.style.color = "red";
+      status.innerHTML = "Oops! There was a problem submitting your form";
+      button.disabled = false;
+    });
+  }
+  form.addEventListener("submit", handleSubmit)
+</script>
 
 </body>
 
