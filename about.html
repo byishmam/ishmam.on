@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>About Me</title>
+  <title>Tajwar Hasan Ishmam</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
@@ -28,7 +28,7 @@
   <link href="css/main.css" rel="stylesheet">
 
   <!-- =======================================================
-  * Template Name: About Me page
+  * Template Name: About Me
   * Author: Ishmam
   ======================================================== -->
 </head>
@@ -43,9 +43,9 @@
         <ul>
           <li><a href="index.html"><i class="bi bi-house navicon"></i>Home</a></li>
           <li><a href="#"><i class="bi bi-person navicon"></i> About</a></li>
-          <li><a href="index.html#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
+          <li><a href="resume.html"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
           <li><a href="portfolio.html"><i class="bi bi-images navicon"></i> Portfolio</a></li>
-          <li><a href="index.html#services"><i class="bi bi-hdd-stack navicon"></i> Services</a></li>
+          <li><a href="services.html"><i class="bi bi-hdd-stack navicon"></i> Services</a></li>
           <li class="dropdown"><a href="#"><i class="bi bi-menu-button navicon"></i> <span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>
               <li><a href="#">Dropdown 1</a></li>
@@ -63,7 +63,7 @@
               <li><a href="#">Dropdown 4</a></li>
             </ul>
           </li>
-          <li><a href="index.html#contact"><i class="bi bi-envelope navicon"></i> Contact</a></li>
+          <li><a href="contact.html"><i class="bi bi-envelope navicon"></i> Contact</a></li>
         </ul>
       </nav>
 
@@ -88,7 +88,7 @@
         <nav class="breadcrumbs">
           <ol>
             <li><a href="index.html">Home</a></li>
-            <li class="current">About Me</li>
+            <li class="current">About</li>
           </ol>
         </nav>
       </div>
@@ -407,6 +407,55 @@
 
   <!-- Main JS File -->
   <script src="js/main.js"></script>
+
+    <script>
+  var form = document.getElementById("ajax-contact-form");
+  
+  async function handleSubmit(event) {
+    event.preventDefault();
+    var status = document.getElementById("form-status");
+    var button = document.getElementById("submit-button");
+    var data = new FormData(event.target);
+    
+    // UI update: Loading state
+    status.style.display = "block";
+    status.style.color = "blue";
+    status.innerHTML = "Sending...";
+    button.disabled = true;
+
+    fetch(event.target.action, {
+      method: form.method,
+      body: data,
+      headers: {
+          'Accept': 'application/json'
+      }
+    }).then(response => {
+      if (response.ok) {
+        // SUCCESS: Show green message
+        status.style.color = "green";
+        status.innerHTML = "Your message has been sent. Thank you!";
+        form.reset();
+        button.disabled = false;
+      } else {
+        // ERROR: Show red message
+        response.json().then(data => {
+          status.style.color = "red";
+          if (Object.hasOwn(data, 'errors')) {
+            status.innerHTML = data["errors"].map(error => error["message"]).join(", ");
+          } else {
+            status.innerHTML = "Oops! There was a problem submitting your form";
+          }
+          button.disabled = false;
+        })
+      }
+    }).catch(error => {
+      status.style.color = "red";
+      status.innerHTML = "Oops! There was a problem submitting your form";
+      button.disabled = false;
+    });
+  }
+  form.addEventListener("submit", handleSubmit)
+</script>
 
 </body>
 
