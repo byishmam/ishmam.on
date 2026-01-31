@@ -2221,6 +2221,149 @@ section,
 }
 
 /*--------------------------------------------------------------
+# Campaign Details Section
+--------------------------------------------------------------*/
+.campaign-details .campaign-details-slider {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 0 30px rgba(var(--default-color), 0.1);
+}
+
+.campaign-details .campaign-details-slider .swiper-wrapper {
+  height: auto !important;
+}
+
+.campaign-details .campaign-details-slider img {
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}
+
+.campaign-details .campaign-details-slider .swiper-pagination {
+  position: absolute;
+  bottom: 20px;
+}
+
+.campaign-details .campaign-details-slider .swiper-pagination .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background-color: var(--contrast-color);
+  opacity: 0.5;
+  transition: 0.3s;
+}
+
+.campaign-details .campaign-details-slider .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
+  opacity: 1;
+  background-color: var(--accent-color);
+}
+
+.campaign-details .campaign-info {
+  padding: 30px;
+  background-color: var(--surface-color);
+  border-radius: 8px;
+  box-shadow: 0 0 30px rgba(var(--default-color), 0.1);
+}
+
+.campaign-details .campaign-info h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+}
+
+.campaign-details .campaign-info ul {
+  padding: 0;
+  list-style: none;
+}
+
+.campaign-details .campaign-info ul li {
+  padding: 10px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+}
+
+.campaign-details .campaign-info ul li:last-child {
+  border-bottom: 0;
+}
+
+.campaign-details .campaign-info ul li strong {
+  font-weight: 600;
+  margin-right: 10px;
+  color: var(--heading-color);
+}
+
+.campaign-details .campaign-info ul li a {
+  color: var(--accent-color);
+  transition: 0.3s;
+}
+
+.campaign-details .campaign-info ul li a:hover {
+  color: color-mix(in srgb, var(--accent-color), transparent 25%);
+  text-decoration: underline;
+}
+
+.campaign-details .campaign-description h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.campaign-details .campaign-description p {
+  padding: 0;
+  margin-bottom: 20px;
+  color: color-mix(in srgb, var(--default-color), transparent 20%);
+}
+
+.campaign-details .campaign-description .features h3 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.campaign-details .campaign-description .features .feature-item {
+  padding: 30px;
+  background-color: var(--surface-color);
+  border-radius: 8px;
+  height: 100%;
+  transition: 0.3s;
+  box-shadow: 0 0 30px rgba(var(--default-color), 0.1);
+}
+
+.campaign-details .campaign-description .features .feature-item:hover {
+  transform: translateY(-5px);
+}
+
+.campaign-details .campaign-description .features .feature-item i {
+  font-size: 32px;
+  color: var(--accent-color);
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.campaign-details .campaign-description .features .feature-item h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.campaign-details .campaign-description .features .feature-item p {
+  margin: 0;
+  font-size: 15px;
+}
+
+@media (max-width: 991px) {
+  .campaign-details .campaign-info {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .campaign-details .campaign-description h2 {
+    font-size: 24px;
+  }
+}
+
+/*--------------------------------------------------------------
 # Portfolio Details Section
 --------------------------------------------------------------*/
 .portfolio-details .portfolio-details-slider {
