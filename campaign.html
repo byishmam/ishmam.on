@@ -31,6 +31,36 @@
   * Template Name: Campaign
   * Author: Ishmam
   ======================================================== -->
+
+<style>
+  .glow-button {
+    /* Initial subtle shadow */
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+    animation: glowing 2s infinite;
+  }
+
+  @keyframes glowing {
+    0% {
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+    }
+    50% {
+      /* This creates the "bloom" or glow effect */
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.4);
+    }
+    100% {
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+    }
+  }
+
+  /* Optional: Make it glow even brighter when you hover over it */
+  .glow-button:hover {
+    background-color: #f8f9fa !important;
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 1);
+    animation: none; /* Stops the pulse so it stays bright */
+  }
+</style>
+
 </head>
 
 <body class="campaign-details-page">
@@ -173,11 +203,25 @@
 
           <div class="col-lg-4">
             <div class="campaign-info" data-aos="fade-left" data-aos-delay="200">
-              <h3>এক নজরে</h3>
+              <h3>আপনি কি এমন বাংলাদেশ চান, যেখানে —</h3>
               <ul>
-                <li><strong>পরিচিতি</strong>: বাংলা রেস্তোরাঁ, খাঁটি বাঙালি এবং স্থানীয় চট্টগ্রামের খাবারের জন্য।</li>
-                <li><strong>সার্ভিস</strong>: ডাইন-ইন, আউটডোর সিটিং।</li>
-                <li><strong>ঠিকানা</strong>: জামালখান, চট্টগ্রাম, বাংলাদেশ।</li>
+                <li>সাংবিধানিক সংস্কারের মাধ্যমে একটি শক্তিশালী গণতন্ত্র, স্বচ্ছ শাসনব্যবস্থা এবং জবাবদিহিতামূলক প্রশাসন প্রতিষ্ঠিত হবে। আপনার ভোটই নির্ধারণ করবে বাংলাদেশের ভবিষ্যৎ।</li>
+                <li>মনে রাখবেন, পরিবর্তনের চাবি এবার আপনার হাতে।</li>
+                <div class="col-12 text-center">
+      <div id="form-status" style="margin-bottom: 15px; display: none;"></div>
+
+      <a href="https://gonovote.gov.bd/" target="_blank">
+      <button type="submit" id="submit-button" class="btn glow-button" style="
+        background-color: #fff; 
+        color: #482c2a; 
+        padding: 12px 40px; 
+        border-radius: 50px; 
+        border: none; 
+        font-weight: 500; 
+        margin-top: 20px;
+        transition: 0.3s;
+        cursor: pointer;">আরো বিস্তারিত</button>
+    </div></a>
               </ul>
             </div>
           </div>
@@ -215,42 +259,6 @@
               <p>
                 সম্মেলনে সভাপতিত্ব করেন ইসলামিক ফাউন্ডেশনের মহাপরিচালক আব্দুস ছালাম খান।
               </p>
-
-              <div class="features mt-4">
-                <h3>Key Features</h3>
-                <div class="row gy-3">
-                  <div class="col-md-6">
-                    <div class="feature-item" data-aos="fade-up" data-aos-delay="400">
-                      <i class="bi bi-check-circle-fill"></i>
-                      <h4>Responsive Design</h4>
-                      <p>Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident</p>
-                    </div>
-                  </div>
-
-                  <div class="col-md-6">
-                    <div class="feature-item" data-aos="fade-up" data-aos-delay="500">
-                      <i class="bi bi-shield-check"></i>
-                      <h4>Advanced Security</h4>
-                      <p>Minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat tarad limino ata</p>
-                    </div>
-                  </div>
-
-                  <div class="col-md-6">
-                    <div class="feature-item" data-aos="fade-up" data-aos-delay="600">
-                      <i class="bi bi-graph-up"></i>
-                      <h4>Performance Optimization</h4>
-                      <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
-                    </div>
-                  </div>
-
-                  <div class="col-md-6">
-                    <div class="feature-item" data-aos="fade-up" data-aos-delay="700">
-                      <i class="bi bi-gear"></i>
-                      <h4>Easy Integration</h4>
-                      <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -277,7 +285,6 @@
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
       </div>
     </div>
-
   </footer>
 
   <!-- Scroll Top -->
@@ -304,4 +311,3 @@
 </body>
 
 </html>
-
