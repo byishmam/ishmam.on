@@ -1,0 +1,593 @@
+/*--------------------------------------------------------------
+# Apple-style Theme, Fonts & Motion Layer
+# Adds: Light/Dark/System theme, Apple-esque type stack (SF Pro
+# on Apple devices, Hind Siliguri for Bangla), smooth Apple-grade
+# easing curves, scroll reveals, magnetic buttons, glass surfaces.
+# This file loads AFTER main.css and only adds / overrides.
+--------------------------------------------------------------*/
+
+/* 1) Type system ------------------------------------------------
+   English text renders in Apple's native system font on Apple
+   devices (San Francisco), with Inter as the closest open-source
+   match everywhere else. Bangla text automatically falls back to
+   Hind Siliguri because SF/Inter/Roboto contain no Bangla glyphs —
+   no extra markup needed, the browser resolves per-character. */
+:root {
+  --font-latin: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro Icons", "Inter", "Helvetica Neue", Arial, sans-serif;
+  --default-font: var(--font-latin), "Hind Siliguri", sans-serif;
+  --heading-font: var(--font-latin), "Hind Siliguri", sans-serif;
+  --nav-font: var(--font-latin), "Hind Siliguri", sans-serif;
+
+  /* Apple's signature spring-like easing curves */
+  --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-apple-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-apple-in: cubic-bezier(0.55, 0, 1, 0.45);
+  --motion-fast: 0.35s;
+  --motion-med: 0.6s;
+  --motion-slow: 0.9s;
+}
+
+@media (min-width: 0) {
+  html[lang="bn"] :root,
+  :root {
+    --default-font: var(--font-latin), "Hind Siliguri", sans-serif;
+  }
+}
+
+/* 2) Theme engine -------------------------------------------------
+   [data-theme="dark"]  -> forces dark palette (site's original look)
+   [data-theme="light"] -> Apple-style light palette
+   No attribute / [data-theme="system"] -> follows OS via prefers-color-scheme,
+   handled by apple-theme.js which writes the resolved value onto <html>. */
+
+:root[data-theme="light"] {
+  --background-color: #f5f5f7;
+  --default-color: #1d1d1f;
+  --heading-color: #1d1d1f;
+  --accent-color: #0071e3;
+  --surface-color: #ffffff;
+  --contrast-color: #ffffff;
+
+  --nav-color: rgba(29, 29, 31, 0.65);
+  --nav-hover-color: #1d1d1f;
+  --nav-mobile-background-color: #ffffff;
+  --nav-dropdown-background-color: #ffffff;
+  --nav-dropdown-color: #1d1d1f;
+  --nav-dropdown-hover-color: #0071e3;
+}
+
+:root[data-theme="light"] .light-background {
+  --background-color: #ffffff;
+  --surface-color: #f5f5f7;
+}
+
+:root[data-theme="light"] .dark-background {
+  --background-color: #ffffff;
+  --default-color: #1d1d1f;
+  --heading-color: #1d1d1f;
+  --surface-color: #f5f5f7;
+  --contrast-color: #1d1d1f;
+}
+
+:root[data-theme="light"] .header .header-container {
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+}
+
+:root[data-theme="light"] #preloader:before {
+  border-color: var(--accent-color) transparent var(--accent-color) transparent;
+}
+
+/* Smooth cross-fade whenever theme changes, applied broadly but cheaply */
+body,
+.header,
+.header .header-container,
+.footer,
+.light-background,
+.dark-background,
+.section,
+.btn,
+input,
+textarea,
+select {
+  transition: background-color var(--motion-med) var(--ease-apple),
+              color var(--motion-med) var(--ease-apple),
+              border-color var(--motion-med) var(--ease-apple),
+              box-shadow var(--motion-med) var(--ease-apple);
+}
+
+/* Prevent the very first paint's theme swap (if any) from being jarring */
+html.theme-ready body {
+  transition: background-color var(--motion-med) var(--ease-apple), color var(--motion-med) var(--ease-apple);
+}
+
+/* 3) Theme toggle control ------------------------------------------ */
+.theme-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0 0 14px 0;
+  padding: 4px;
+  border-radius: 50px;
+  background: color-mix(in srgb, var(--default-color), transparent 92%);
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 85%);
+  width: fit-content;
+}
+
+.theme-switcher button {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: color-mix(in srgb, var(--default-color), transparent 35%);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-apple),
+              color var(--motion-fast) var(--ease-apple),
+              transform var(--motion-fast) var(--ease-apple);
+}
+
+.theme-switcher button:hover {
+  transform: translateY(-1px) scale(1.06);
+  color: var(--default-color);
+}
+
+.theme-switcher button.active {
+  background: var(--accent-color);
+  color: var(--contrast-color);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--accent-color), transparent 60%);
+}
+
+.theme-switcher button:active {
+  transform: scale(0.92);
+}
+
+/* 4) Global motion polish ------------------------------------------- */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+.btn,
+.social-links a,
+.navmenu a,
+.header-toggle,
+.filters-wrapper li,
+.isotope-item,
+img {
+  transition-timing-function: var(--ease-apple);
+}
+
+/* Give AOS Apple's easing + a touch of blur/scale for a premium reveal,
+   without editing every section's markup. AOS still controls timing/offset. */
+[data-aos] {
+  transition-timing-function: var(--ease-apple) !important;
+  transition-duration: 0.9s !important;
+}
+
+[data-aos^="fade"] {
+  filter: blur(6px);
+  transition-property: opacity, transform, filter !important;
+}
+
+[data-aos^="fade"].aos-animate {
+  filter: blur(0);
+}
+
+[data-aos="zoom-in"] {
+  filter: blur(4px);
+  transition-property: opacity, transform, filter !important;
+}
+
+[data-aos="zoom-in"].aos-animate {
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-aos] {
+    filter: none !important;
+    transition-duration: 0.2s !important;
+  }
+}
+
+/* Generic scroll-reveal utility driven by apple-theme.js (IntersectionObserver)
+   for elements that don't already use AOS. */
+.reveal-el {
+  opacity: 0;
+  transform: translateY(28px);
+  filter: blur(8px);
+  transition: opacity var(--motion-slow) var(--ease-apple),
+              transform var(--motion-slow) var(--ease-apple),
+              filter var(--motion-slow) var(--ease-apple);
+  will-change: transform, opacity, filter;
+}
+
+.reveal-el.reveal-in {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-el {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+}
+
+/* 5) Sidebar / header polish ---------------------------------------- */
+.header {
+  transition: background-color var(--motion-med) var(--ease-apple), left 0.45s var(--ease-apple), box-shadow var(--motion-med) var(--ease-apple);
+}
+
+.header .header-container {
+  transition: background-color var(--motion-med) var(--ease-apple), box-shadow var(--motion-med) var(--ease-apple), border-color var(--motion-med) var(--ease-apple);
+}
+
+.navmenu a {
+  position: relative;
+  border-radius: 12px;
+  transition: color var(--motion-fast) var(--ease-apple), background-color var(--motion-fast) var(--ease-apple), transform var(--motion-fast) var(--ease-apple), padding-left var(--motion-fast) var(--ease-apple);
+}
+
+.navmenu a:hover {
+  background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
+  transform: translateX(4px);
+}
+
+.navmenu .active {
+  background-color: color-mix(in srgb, var(--accent-color), transparent 88%);
+}
+
+.navmenu a .navicon {
+  transition: transform var(--motion-fast) var(--ease-apple);
+}
+
+.navmenu a:hover .navicon {
+  transform: scale(1.15);
+}
+
+.header-toggle {
+  transition: background-color var(--motion-fast) var(--ease-apple), transform var(--motion-fast) var(--ease-apple);
+}
+
+.header-toggle:active {
+  transform: scale(0.9);
+}
+
+.header.header-show .header-toggle {
+  transform: rotate(90deg);
+}
+
+/* 6) Buttons — magnetic feel, Apple-style press & glow -------------- */
+.btn,
+.hero .hero-actions .btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--motion-fast) var(--ease-apple), box-shadow var(--motion-fast) var(--ease-apple), background-color var(--motion-fast) var(--ease-apple), color var(--motion-fast) var(--ease-apple);
+  will-change: transform;
+}
+
+.btn:active {
+  transform: scale(0.96) !important;
+}
+
+/* Ripple element injected by JS on click */
+.btn .ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--contrast-color), transparent 55%);
+  transform: scale(0);
+  animation: apple-ripple 0.6s var(--ease-apple);
+  pointer-events: none;
+}
+
+@keyframes apple-ripple {
+  to {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+/* 7) Social icons, cards, images — lift & zoom on hover -------------- */
+.social-links a,
+.hero .social-links a {
+  transition: transform var(--motion-fast) var(--ease-apple), background-color var(--motion-fast) var(--ease-apple), color var(--motion-fast) var(--ease-apple), box-shadow var(--motion-fast) var(--ease-apple);
+}
+
+.social-links a:hover,
+.hero .social-links a:hover {
+  transform: translateY(-4px) scale(1.08);
+}
+
+.service-item,
+.portfolio-item,
+.testimonial-item,
+.stats-item,
+.skills-category,
+.pricing-item,
+.member,
+.campaign-item,
+.card {
+  transition: transform var(--motion-med) var(--ease-apple), box-shadow var(--motion-med) var(--ease-apple);
+}
+
+.service-item:hover,
+.portfolio-item:hover,
+.pricing-item:hover,
+.member:hover,
+.campaign-item:hover,
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
+}
+
+.stats-item:hover {
+  transform: translateY(-6px) scale(1.03);
+}
+
+/* Smooth Apple-like image zoom inside any overflow-hidden frame */
+.portfolio-item img,
+.portfolio-content img,
+.member img,
+.about img,
+.profile-image,
+.service-item img {
+  transition: transform var(--motion-slow) var(--ease-apple), filter var(--motion-slow) var(--ease-apple);
+}
+
+.portfolio-item:hover img,
+.portfolio-content:hover img,
+.member:hover img {
+  transform: scale(1.08);
+}
+
+/* Hero profile portrait: gentle float + hover tilt, Apple-product-shot style */
+.hero .hero-visual .profile-container {
+  transition: transform var(--motion-slow) var(--ease-apple);
+  animation: apple-float 6s var(--ease-apple-soft) infinite;
+}
+
+@keyframes apple-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+.hero .hero-visual .profile-container:hover {
+  transform: translateY(-14px) scale(1.015);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero .hero-visual .profile-container {
+    animation: none;
+  }
+}
+
+/* 8) Cursor glow (desktop, fine-pointer only) — subtle Apple-esque
+   ambient light that follows the cursor. Purely additive, disabled
+   automatically on touch devices and reduced-motion. */
+.apple-cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-color), transparent 88%) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-apple);
+  will-change: transform;
+}
+
+.apple-cursor-glow.is-active {
+  opacity: 1;
+}
+
+/* 9) Scroll-to-top button — smoother spring */
+.scroll-top {
+  transition: all var(--motion-fast) var(--ease-apple);
+}
+
+.scroll-top:hover {
+  transform: translateY(-4px) scale(1.06);
+}
+
+/* 10) Page-load fade-in for main content */
+.main {
+  animation: apple-page-in 0.8s var(--ease-apple) both;
+}
+
+@keyframes apple-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main {
+    animation: none;
+  }
+}
+
+/* 11) Custom, minimal scrollbar to match the Apple aesthetic */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--default-color), transparent 75%);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--accent-color), transparent 40%);
+  background-clip: padding-box;
+}
+
+/* 12) Native smooth scrolling (site uses in-page anchors) ----------- */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* 13) Hero entrance — staggered, blurred rise, Apple keynote style --- */
+.hero-text > * {
+  opacity: 0;
+  transform: translateY(22px);
+  filter: blur(10px);
+  animation: apple-stagger-in 0.9s var(--ease-apple) forwards;
+}
+
+.hero-text > *:nth-child(1) { animation-delay: 0.05s; }
+.hero-text > *:nth-child(2) { animation-delay: 0.16s; }
+.hero-text > *:nth-child(3) { animation-delay: 0.27s; }
+.hero-text > *:nth-child(4) { animation-delay: 0.38s; }
+.hero-text > *:nth-child(5) { animation-delay: 0.49s; }
+.hero-text > *:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes apple-stagger-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.hero .accent-text {
+  background: linear-gradient(100deg, var(--accent-color), color-mix(in srgb, var(--accent-color), white 45%), var(--accent-color));
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: apple-shine 5s linear infinite;
+}
+
+@keyframes apple-shine {
+  to { background-position: -220% center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-text > * {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    animation: none;
+  }
+  .hero .accent-text {
+    animation: none;
+  }
+}
+
+/* 14) Sliding nav indicator — a pill that glides behind whichever
+   navmenu link is active/hovered, injected by apple-theme.js.       */
+.navmenu {
+  position: relative;
+}
+
+.nav-indicator {
+  position: absolute;
+  left: 0;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent-color), transparent 88%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.5s var(--ease-apple), width 0.5s var(--ease-apple), height 0.5s var(--ease-apple), opacity 0.3s var(--ease-apple);
+  z-index: 0;
+}
+
+.nav-indicator.is-visible {
+  opacity: 1;
+}
+
+.navmenu ul li {
+  position: relative;
+  z-index: 1;
+}
+
+/* 15) Page-title / breadcrumb entrance on inner pages ---------------- */
+.page-title {
+  opacity: 0;
+  transform: translateY(16px);
+  filter: blur(8px);
+  animation: apple-stagger-in 0.8s var(--ease-apple) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-title {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    animation: none;
+  }
+}
+
+/* 16) Cross-document view transitions — native, GPU-composited page
+   morph between pages on browsers that support it (Chrome/Edge).
+   No-op, fully safe fallback everywhere else.                       */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: apple-vt-out 0.45s var(--ease-apple-in) both;
+}
+
+::view-transition-new(root) {
+  animation: apple-vt-in 0.5s var(--ease-apple) both;
+}
+
+@keyframes apple-vt-out {
+  to { opacity: 0; filter: blur(6px); }
+}
+
+@keyframes apple-vt-in {
+  from { opacity: 0; filter: blur(6px); transform: scale(0.99); }
+}
+
+/* 17) JS-driven fade-out overlay fallback for browsers without the
+   View Transition API — applied to <html> right before navigation. */
+html.apple-leaving .main,
+html.apple-leaving .header {
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(-6px);
+  transition: opacity 0.35s var(--ease-apple-in), filter 0.35s var(--ease-apple-in), transform 0.35s var(--ease-apple-in);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.apple-leaving .main,
+  html.apple-leaving .header {
+    transition: none;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
